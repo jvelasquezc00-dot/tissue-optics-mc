@@ -82,10 +82,13 @@ the **same μa, μs and g**, so the only difference is the shape of p(θ).
   wide-angle scattering. Mie reaches the same g with a broad forward lobe and
   almost no backscattering (p(180°) is about 60 times lower).
 - **(b, c)** Near the source, a photon must turn around after only a few events to
-  come back out, and that needs large-angle scattering. HG has more of it, so it
-  predicts a reflectance up to ~3 times higher than Mie at r ≈ 0. The curves cross
-  at r ≈ 1.5 mm, close to one transport mean free path (1/μs′ = 1.8 mm). Beyond it,
-  Mie stays 5–15 % higher, a gap that shrinks with distance and with lower absorption.
+  come back out, and that needs large-angle scattering. HG has more of it (1.2 % of
+  the light scattered beyond 90° vs 0.37 % for Mie), so it predicts a reflectance
+  about 2 times higher at r = 0.25 mm, and more in the first 0.1 mm, where the value
+  depends on the bin width. The curves cross between 1.3 and 1.6 mm, of the order of
+  one transport mean free path (1/μs′ = 1.8 mm). From 2 to 5 mm, Mie is 10–15 %
+  higher: the photons that do not escape near the source re-emerge farther away.
+  The gap tends to shrink with distance.
 - The total diffuse reflectance barely changes (0.6744 vs 0.6701), as expected from
   the similarity relation: integrated and far-field quantities depend mostly on
   μs′ = μs(1 − g).
@@ -93,8 +96,29 @@ the **same μa, μs and g**, so the only difference is the shape of p(θ).
 The parameter γ = (1 − g₂)/(1 − g), where g₂ is the second Legendre moment of the
 phase function, summarizes this: here γ = 1.94 for HG and 2.53 for Mie, and a higher γ
 means fewer short, backward paths and lower reflectance close to the source
-(Bevilacqua & Depeursinge, 1999). This is why HG can bias measurements made with
-small source–detector separations, such as fiber probes in contact with tissue.
+(Bevilacqua & Depeursinge, 1999). For HG, γ = 1 + g always.
+
+The sign of the error depends on the particle. Comparing single spheres with an HG
+function of the same g:
+
+| m | x | g | γ (Mie) | γ (HG) | HG near the source |
+|---|---|---|---|---|---|
+| 1.03 | 6.75 | 0.944 | 2.53 | 1.94 | overestimates Rd |
+| 1.03 | 15 | 0.985 | 2.65 | 1.98 | overestimates Rd |
+| 1.05 | 3 | 0.791 | 2.16 | 1.79 | overestimates Rd |
+| 1.4 | 3 | 0.771 | 2.01 | 1.77 | overestimates Rd, smaller gap |
+| 1.1 | 1 | 0.171 | 1.07 | 1.17 | underestimates Rd |
+
+Large, low-contrast spheres scatter into a broad forward lobe with almost no
+backscattering, so HG overestimates the near-source reflectance. Small spheres
+approach Rayleigh scattering, which is symmetric, and the trend reverses. HG can
+therefore bias measurements made with small source–detector separations, such as
+fiber probes in contact with tissue, in either direction.
+
+Limitations of this comparison: monodisperse spheres (the minima in panel (a)
+wash out with a size distribution), an index-matched slab boundary (n = 1), an
+infinitely narrow beam and a detector that collects all exiting angles. It is a
+numerical illustration of a known effect, not a model of a specific tissue.
 
 ```python
 from tissuemc import Medium, MiePhaseFunction, run
