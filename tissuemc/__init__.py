@@ -6,6 +6,8 @@ boundaries and Russian roulette.
 """
 
 from .core import Medium, SimulationResult, run, henyey_greenstein, fresnel_reflectance
+from .mie import MiePhaseFunction
 
-__all__ = ["Medium", "SimulationResult", "run", "henyey_greenstein", "fresnel_reflectance"]
-__version__ = "0.1.0"
+__all__ = ["Medium", "SimulationResult", "run", "henyey_greenstein", "fresnel_reflectance",
+           "MiePhaseFunction"]
+__version__ = "0.2.0"

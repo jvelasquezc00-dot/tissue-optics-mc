@@ -199,6 +199,7 @@ def run(
     weight_threshold: float = 1e-4,
     roulette_chance: float = 0.1,
     max_iterations: int = 1_000_000,
+    phase=None,
 ) -> SimulationResult:
     """Run the Monte Carlo simulation for a pencil beam at normal incidence.
 
@@ -211,7 +212,16 @@ def run(
     z_max, nz : depth grid for A(z) [cm]; z_max defaults to the slab thickness or,
         for a semi-infinite medium, to ten transport mean free paths
     weight_threshold, roulette_chance : Russian roulette parameters
+    phase : phase function used for scattering. None (default) uses Henyey–Greenstein
+        with the medium's g. Any object with a ``sample(xi) -> cos(theta)`` method can
+        be passed, e.g. ``tissuemc.mie.MiePhaseFunction``; its ``g`` attribute should
+        match ``medium.g`` so that reported quantities such as mu_s' stay consistent.
     """
+    if phase is not None and hasattr(phase, "g") and abs(phase.g - medium.g) > 1e-3:
+        raise ValueError(
+            f"phase function has g = {phase.g:.4f} but medium.g = {medium.g:.4f}; "
+            "build the Medium with g=phase.g"
+        )
     rng = np.random.default_rng(seed)
     m = medium
     mut = m.mut
@@ -315,7 +325,8 @@ def run(
             ok = (idz >= 0) & (idz < nz)
             np.add.at(a_hist, idz[ok], dw[ok])
 
-            cost = henyey_greenstein(m.g, rng.random(mi.size))
+            xi = rng.random(mi.size)
+            cost = henyey_greenstein(m.g, xi) if phase is None else phase.sample(xi)
             phi = 2.0 * np.pi * rng.random(mi.size)
             ux[mi], uy[mi], uz[mi] = _scatter(ux[mi], uy[mi], uz[mi], cost, phi)
 
